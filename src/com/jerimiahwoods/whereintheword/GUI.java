@@ -6,10 +6,10 @@ public class GUI extends JFrame {
 
 	public GUI() {
 		
-		this.setSize(800, 800);
+		this.setSize(600, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);;
-		this.setTitle("Where in the Word");
+		this.setTitle("Where in the Word?");
 	
 	}
 

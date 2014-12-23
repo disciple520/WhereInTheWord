@@ -8,24 +8,24 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.jerimiahwoods.whereintheword.WhereInTheWord;
+
 public class DefaultPanel extends JPanel {
 
 	private JLabel lblTitle;
-	private JButton btnStartQuiz;
+	private JButton startQuizButton;
 
 	public DefaultPanel() {
 		
-		lblTitle = new JLabel("Where in the Word");
+		lblTitle = new JLabel("Where in the Word?");
 		lblTitle.setFont(new Font("Serif", Font.PLAIN, 30));
 		
-		btnStartQuiz = new JButton("Start Quiz");
+		startQuizButton = new JButton("Start Quiz");
 		ListenForBtnStartQuiz listenForBtnStartQuiz = new ListenForBtnStartQuiz();
-		btnStartQuiz.addActionListener(listenForBtnStartQuiz);
+		startQuizButton.addActionListener(listenForBtnStartQuiz);
 		
 		this.add(lblTitle);
-		this.add(btnStartQuiz);
-		System.out.println("lbl Parent:" + lblTitle.getParent().toString() +
-				           "\nbtn Parent:" + btnStartQuiz.getParent().toString());
+		this.add(startQuizButton);
 		
 	}
 	
@@ -33,8 +33,8 @@ public class DefaultPanel extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			
-			JButton btnStartQuiz = (JButton) e.getSource();
-			btnStartQuiz.setVisible(false);
+			WhereInTheWord.startQuiz();
+			//WhereInTheWord.getCl().show(WhereInTheWord.getCardPanel(), WhereInTheWord.QUIZPANEL);
 			
 		}
 		
@@ -49,11 +49,11 @@ public class DefaultPanel extends JPanel {
 	}
 
 	public JButton getBtnStartQuiz() {
-		return btnStartQuiz;
+		return startQuizButton;
 	}
 
 	public void setBtnStartQuiz(JButton btnStartQuiz) {
-		this.btnStartQuiz = btnStartQuiz;
+		this.startQuizButton = btnStartQuiz;
 	}
 
 }
