@@ -22,6 +22,8 @@ public class QuestionPanel extends JPanel {
 	
 	public QuestionPanel() {
 		
+		this.setBackground(Color.lightGray);
+		
 		questionText = new JTextArea(1,40);
 		questionText.setText("Where is the verse \"" + jn3_16 + "\" located?");
 		questionText.setLineWrap(true);
@@ -45,7 +47,7 @@ public class QuestionPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				WhereInTheWord.checkAnswer();
-				WhereInTheWord.displayAnswer();
+				WhereInTheWord.displayAnswerPanel();
 				
 			}
 		});
@@ -59,6 +61,8 @@ public class QuestionPanel extends JPanel {
 		
 	}
 
+	
+// Getters and Setters
 	public ButtonGroup getAnswerButtonGroup() {
 		return answerButtonGroup;
 	}

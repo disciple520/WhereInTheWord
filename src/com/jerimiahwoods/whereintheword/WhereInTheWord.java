@@ -8,12 +8,13 @@ import javax.swing.*;
 public class WhereInTheWord {
 
 	final static String DEFAULTPANEL = "Card to display welcome panel";
-    final static String QUIZPANEL    = "Card to display quiz question";
-    final static String ANSWERPANEL  = "Card to display quiz answer";
+    final static String QUESTIONPANEL    = "Card to display quiz questions";
+    final static String ANSWERPANEL  = "Card to display quiz answers";
     
     static String result = "";
     
-    private static CardLayout cl;
+    private static CardLayout cardLayout;
+    
     private static JPanel cardPanel;
     private static DefaultPanel defaultPanel;
 	private static QuestionPanel questionPanel;
@@ -30,30 +31,33 @@ public class WhereInTheWord {
 		GUI gui = new GUI();
 		
 		
-		cl = new CardLayout();
-		cardPanel     = new JPanel(cl);
+		cardLayout    = new CardLayout();
+		
+		cardPanel     = new JPanel(cardLayout);
 		defaultPanel  = new DefaultPanel();
 		questionPanel = new QuestionPanel();
 		answerPanel   = new AnswerPanel();
 		
-		defaultPanel.setBackground(Color.lightGray);
-		questionPanel.setBackground(Color.lightGray);
-		
-		cardPanel.setLayout(cl);
 		cardPanel.add(defaultPanel,  DEFAULTPANEL);
-		cardPanel.add(questionPanel, QUIZPANEL);
+		cardPanel.add(questionPanel, QUESTIONPANEL);
 		cardPanel.add(answerPanel,   ANSWERPANEL);
 		
-		cl.show(cardPanel, DEFAULTPANEL);
+		cardLayout.show(cardPanel, DEFAULTPANEL);
 		
 		gui.add(cardPanel);
 		gui.setVisible(true);
 		
 	}
 	
-	public static void startQuiz() {
+	public static void displayDefaultPanel() {
 		
-		cl.show(cardPanel, QUIZPANEL);
+		cardLayout.show(cardPanel, DEFAULTPANEL);
+		
+	}
+	
+	public static void displayQuestionPanel() {
+		
+		cardLayout.show(cardPanel, QUESTIONPANEL);
 		
 	}
 	
@@ -64,25 +68,23 @@ public class WhereInTheWord {
 		} else {
 			result = "Incorrect!";
 		}
-	
 		
 	}
 	
-	public static void displayAnswer() {
+	public static void displayAnswerPanel() {
 		
 		answerPanel.getResultLabel().setText(result);
-		cl.show(cardPanel, ANSWERPANEL);
+		cardLayout.show(cardPanel, ANSWERPANEL);
 		
 	}
 
+	// Getters and Setters
 	public static JPanel getCardPanel() {
 		return cardPanel;
 	}
 	
-	public static CardLayout getCl() {
-		
-		return cl;
-		
+	public static CardLayout getCardLayout() {
+		return cardLayout;
 	}
 	
 	

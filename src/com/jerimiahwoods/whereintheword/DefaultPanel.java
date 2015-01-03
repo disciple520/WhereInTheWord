@@ -1,5 +1,6 @@
 package com.jerimiahwoods.whereintheword;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,29 +15,26 @@ public class DefaultPanel extends JPanel {
 
 	private JLabel lblTitle;
 	private JButton startQuizButton;
+	private JButton quitButton;
 
 	public DefaultPanel() {
 		
+		this.setBackground(Color.lightGray);
 		lblTitle = new JLabel("Where in the Word?");
 		lblTitle.setFont(new Font("Serif", Font.PLAIN, 30));
 		
 		startQuizButton = new JButton("Start Quiz");
-		ListenForBtnStartQuiz listenForBtnStartQuiz = new ListenForBtnStartQuiz();
-		startQuizButton.addActionListener(listenForBtnStartQuiz);
+		startQuizButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				WhereInTheWord.displayQuestionPanel();
+				
+			}
+		});
 		
 		this.add(lblTitle);
 		this.add(startQuizButton);
-		
-	}
-	
-	private class ListenForBtnStartQuiz implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			
-			WhereInTheWord.startQuiz();
-			//WhereInTheWord.getCl().show(WhereInTheWord.getCardPanel(), WhereInTheWord.QUIZPANEL);
-			
-		}
 		
 	}
 	
