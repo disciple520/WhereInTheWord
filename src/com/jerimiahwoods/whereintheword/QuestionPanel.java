@@ -11,7 +11,11 @@ import java.awt.event.ActionListener;
 public class QuestionPanel extends JPanel {
 
 	private String jn3_16 = "For God so loved the world he gave his only begotten son that whoever would believe in him should not perish but have eternal life";
-
+	private String answer = "";
+	private String correctAnswer = "";
+	private String resultPhrase = "";
+	
+	
 	private JTextArea questionText;
 	private JRadioButton optAnswerOne;
 	private JRadioButton optAnswerTwo;
@@ -31,11 +35,17 @@ public class QuestionPanel extends JPanel {
 		questionText.setBackground(Color.lightGray);
 		
 		optAnswerOne = new JRadioButton("Revelation 9:9");
+		optAnswerOne.setActionCommand("Revelation 9:9");
 		optAnswerTwo = new JRadioButton("John 3:16");
-		optAnswerThree = new JRadioButton("Hebrews 6:23", true);
+		optAnswerTwo.setActionCommand("John 3:16");
+		optAnswerThree = new JRadioButton("Hebrews 6:23");
+		optAnswerThree.setActionCommand("Hebrews 6:23");
 		optAnswerFour = new JRadioButton("Exodus 22:11");
+		optAnswerFour.setActionCommand("Exodus 22:11");
 		
-		ButtonGroup answerButtonGroup = new ButtonGroup();
+		correctAnswer = "John 3:16";
+		
+		final ButtonGroup answerButtonGroup = new ButtonGroup();
 		answerButtonGroup.add(optAnswerOne);
 		answerButtonGroup.add(optAnswerTwo);
 		answerButtonGroup.add(optAnswerThree);
@@ -46,7 +56,8 @@ public class QuestionPanel extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				WhereInTheWord.checkAnswer();
+				answer = answerButtonGroup.getSelection().getActionCommand();
+				checkAnswer();
 				WhereInTheWord.displayAnswerPanel();
 				
 			}
@@ -61,6 +72,15 @@ public class QuestionPanel extends JPanel {
 		
 	}
 
+	public void checkAnswer() {
+		
+		if (answer == correctAnswer ) {
+			resultPhrase = "Correct!";
+		} else {
+			resultPhrase = "Incorrect!";
+		}
+		
+	}
 	
 // Getters and Setters
 	public ButtonGroup getAnswerButtonGroup() {
@@ -97,6 +117,16 @@ public class QuestionPanel extends JPanel {
 
 	public void setOptAnswerFour(JRadioButton optAnswerFour) {
 		this.optAnswerFour = optAnswerFour;
+	}
+
+	
+	public String getResultPhrase() {
+		return resultPhrase;
+	}
+
+	
+	public void setResultPhrase(String resultPhrase) {
+		this.resultPhrase = resultPhrase;
 	}
 	
 	

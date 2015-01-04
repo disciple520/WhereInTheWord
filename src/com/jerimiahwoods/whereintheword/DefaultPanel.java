@@ -33,8 +33,19 @@ public class DefaultPanel extends JPanel {
 			}
 		});
 		
+		quitButton = new JButton("Quit");
+		quitButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				System.exit(0);
+				
+			}
+		});
+		
 		this.add(lblTitle);
 		this.add(startQuizButton);
+		this.add(quitButton);
 		
 	}
 	

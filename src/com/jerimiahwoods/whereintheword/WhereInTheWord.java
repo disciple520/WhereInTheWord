@@ -11,8 +11,6 @@ public class WhereInTheWord {
     final static String QUESTIONPANEL    = "Card to display quiz questions";
     final static String ANSWERPANEL  = "Card to display quiz answers";
     
-    static String result = "";
-    
     private static CardLayout cardLayout;
     
     private static JPanel cardPanel;
@@ -61,19 +59,9 @@ public class WhereInTheWord {
 		
 	}
 	
-	public static void checkAnswer() {
-		
-		if ( questionPanel.getOptAnswerTwo().isSelected() == true) {
-			result = "Correct!";
-		} else {
-			result = "Incorrect!";
-		}
-		
-	}
-	
 	public static void displayAnswerPanel() {
 		
-		answerPanel.getResultLabel().setText(result);
+		answerPanel.getResultLabel().setText(questionPanel.getResultPhrase());
 		cardLayout.show(cardPanel, ANSWERPANEL);
 		
 	}
