@@ -19,7 +19,7 @@ public class AnswerPanel extends JPanel {
 		this.setBackground(Color.lightGray);
 		
 		resultLabel = new JLabel();
-		nextQuestionButton = new JButton("Try Another Question");
+		nextQuestionButton = new JButton("Next Question");
 		quitButton = new JButton("Quit to Main Menu");
 		
 		this.add(resultLabel);
@@ -40,6 +40,7 @@ public class AnswerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				WhereInTheWord.displayQuestionPanel();
+				WhereInTheWord.getQuestionPanel().generateNewQuestion();
 				
 			}
 		});

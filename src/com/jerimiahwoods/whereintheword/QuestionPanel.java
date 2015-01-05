@@ -5,18 +5,29 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 
 public class QuestionPanel extends JPanel {
 
-	private String jn3_16 = "For God so loved the world he gave his only begotten son that whoever would believe in him should not perish but have eternal life";
 	private String answer = "";
 	private String correctAnswer = "";
 	private String resultPhrase = "";
 	
+	private ArrayList<String> allLinesFromMasterFile;
+	private String randomBook;
+	private String randomChapter;
+	private String randomVerse;
+	private String randomText;
+	private String randomReference;
 	
 	private JTextArea questionText;
+	ArrayList<JRadioButton> radioButtons;
 	private JRadioButton optAnswerOne;
 	private JRadioButton optAnswerTwo;
 	private JRadioButton optAnswerThree;
@@ -24,33 +35,33 @@ public class QuestionPanel extends JPanel {
 	private ButtonGroup answerButtonGroup;
 	private JButton confirmAnswerButton;
 	
+	
 	public QuestionPanel() {
 		
 		this.setBackground(Color.lightGray);
 		
-		questionText = new JTextArea(1,40);
-		questionText.setText("Where is the verse \"" + jn3_16 + "\" located?");
+		questionText = new JTextArea(1,45);
 		questionText.setLineWrap(true);
 		questionText.setWrapStyleWord(true);
 		questionText.setBackground(Color.lightGray);
+			
+		optAnswerOne = new JRadioButton();
+		optAnswerTwo = new JRadioButton();
+		optAnswerThree = new JRadioButton();
+		optAnswerFour = new JRadioButton();
 		
-		optAnswerOne = new JRadioButton("Revelation 9:9");
-		optAnswerOne.setActionCommand("Revelation 9:9");
-		optAnswerTwo = new JRadioButton("John 3:16");
-		optAnswerTwo.setActionCommand("John 3:16");
-		optAnswerThree = new JRadioButton("Hebrews 6:23");
-		optAnswerThree.setActionCommand("Hebrews 6:23");
-		optAnswerFour = new JRadioButton("Exodus 22:11");
-		optAnswerFour.setActionCommand("Exodus 22:11");
-		
-		correctAnswer = "John 3:16";
+		radioButtons = new ArrayList<JRadioButton>();
+		radioButtons.add(optAnswerOne);
+		radioButtons.add(optAnswerTwo);
+		radioButtons.add(optAnswerThree);
+		radioButtons.add(optAnswerFour);
 		
 		final ButtonGroup answerButtonGroup = new ButtonGroup();
 		answerButtonGroup.add(optAnswerOne);
 		answerButtonGroup.add(optAnswerTwo);
 		answerButtonGroup.add(optAnswerThree);
 		answerButtonGroup.add(optAnswerFour);
-		
+		    
 		confirmAnswerButton = new JButton("Confirm Answer");
 		confirmAnswerButton.addActionListener(new ActionListener() {
 
@@ -70,9 +81,52 @@ public class QuestionPanel extends JPanel {
 		this.add(optAnswerFour);
 		this.add(confirmAnswerButton);
 		
+		generateNewQuestion();
+		
 	}
 
-	public void checkAnswer() {
+	public void generateNewQuestion() {
+		
+		Random randomizer = new Random();
+		int correctIndex = randomizer.nextInt(4);
+		
+		for (int i=0;i<radioButtons.size();i++){
+		    
+			JRadioButton button = radioButtons.get(i);
+			try {
+				generateRandomScripture();
+			}
+			catch (IOException e) {
+			    System.err.println("Caught IOException: " + e.getMessage());
+			}
+			
+			if (i == correctIndex) {
+				correctAnswer = randomReference;
+				button.setText(correctAnswer);
+				button.setActionCommand(correctAnswer);
+				questionText.setText(randomText);
+			}
+			else {
+				button.setText(randomReference);
+			}
+		}
+	}
+	public void generateRandomScripture() throws IOException {
+		
+		Random randomizer = new Random();
+		int randomVerseIndex = randomizer.nextInt(WhereInTheWord.getTotalVerses()) + 1;
+		
+		String randomLine = WhereInTheWord.getAllLinesFromMasterFile().get(randomVerseIndex);
+		String[] bookChapterVerseText = randomLine.split("\\|");
+		randomBook = bookChapterVerseText[0];
+		randomChapter = bookChapterVerseText[1];
+		randomVerse = bookChapterVerseText[2];
+		randomText = bookChapterVerseText[3];
+		randomReference = randomBook + " " + randomChapter + ":" + randomVerse;
+		
+	}
+
+	private void checkAnswer() {
 		
 		if (answer == correctAnswer ) {
 			resultPhrase = "Correct!";
