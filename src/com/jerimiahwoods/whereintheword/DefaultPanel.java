@@ -14,7 +14,8 @@ import com.jerimiahwoods.whereintheword.WhereInTheWord;
 public class DefaultPanel extends JPanel {
 
 	private JLabel lblTitle;
-	private JButton startQuizButton;
+	private JButton startScriptureQuizButton;
+	private JButton startSummaryQuizButton;
 	private JButton quitButton;
 
 	public DefaultPanel() {
@@ -23,11 +24,23 @@ public class DefaultPanel extends JPanel {
 		lblTitle = new JLabel("Where in the Word?");
 		lblTitle.setFont(new Font("Serif", Font.PLAIN, 30));
 		
-		startQuizButton = new JButton("Start Quiz");
-		startQuizButton.addActionListener(new ActionListener() {
+		startScriptureQuizButton = new JButton("Start Scripture Quiz");
+		startScriptureQuizButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				
+				WhereInTheWord.setWhichQuiz("Scripture Quiz");
+				WhereInTheWord.displayQuestionPanel();
+				
+			}
+		});
+		
+		startSummaryQuizButton = new JButton("Start Summary Quiz");
+		startSummaryQuizButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				WhereInTheWord.setWhichQuiz("Summary Quiz");
 				WhereInTheWord.displayQuestionPanel();
 				
 			}
@@ -44,7 +57,8 @@ public class DefaultPanel extends JPanel {
 		});
 		
 		this.add(lblTitle);
-		this.add(startQuizButton);
+		this.add(startScriptureQuizButton);
+		this.add(startSummaryQuizButton);
 		this.add(quitButton);
 		
 	}
@@ -58,11 +72,11 @@ public class DefaultPanel extends JPanel {
 	}
 
 	public JButton getBtnStartQuiz() {
-		return startQuizButton;
+		return startScriptureQuizButton;
 	}
 
 	public void setBtnStartQuiz(JButton btnStartQuiz) {
-		this.startQuizButton = btnStartQuiz;
+		this.startScriptureQuizButton = btnStartQuiz;
 	}
 
 }

@@ -1,23 +1,17 @@
 package com.jerimiahwoods.whereintheword;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 import javax.swing.*;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 
 import org.odftoolkit.odfdom.doc.OdfDocument;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
 import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.w3c.dom.Node;
 import org.apache.xml.dtm.ref.DTMNodeList;
@@ -25,20 +19,24 @@ import org.apache.xml.dtm.ref.DTMNodeList;
 public class WhereInTheWord {
 
 	final static String DEFAULTPANEL = "Card to display welcome panel";
-    final static String QUESTIONPANEL    = "Card to display quiz questions";
+    final static String SCRIPTUREQUESTIONPANEL    = "Card to display quiz questions about specific verses";
+    final static String SUMMARYQUESTIONPANEL = "Card to display quiz question about chapter summaries";
     final static String ANSWERPANEL  = "Card to display quiz answers";
     
     private static CardLayout cardLayout;
     
     private static JPanel cardPanel;
     private static DefaultPanel defaultPanel;
-	private static QuestionPanel questionPanel;
+	private static QuestionPanel scriptureQuestionPanel;
+	private static QuestionPanel summaryQuestionPanel;
 	private static AnswerPanel answerPanel;
+	
+	private static String whichQuiz = "Scripture Quiz";
 	
 	private static ArrayList<String> allLinesFromMasterFile;
 	private static int totalVerses;
 
-	private static Map<String, String> summaries;
+	private static ArrayList<ChapterSummary> summaries;
     
 	public static void main(String[] args) {
 	
@@ -50,10 +48,6 @@ public class WhereInTheWord {
 		}
 		catch (Exception e) {
 			System.err.println("Caught Exception: " + e.getMessage());
-		}
-		
-		for(Map.Entry<String, String> entry : summaries.entrySet()) {
-			System.out.println(entry.getKey() + "/" + entry.getValue());
 		}
 		
 		buildUI();
@@ -87,7 +81,7 @@ public class WhereInTheWord {
 		    DTMNodeList nodeList = (DTMNodeList) xpath.evaluate("//table:table-row/table:table-cell", summariesContent, XPathConstants.NODESET);
 		    String chapter = "";
 		    String text = "";
-		    summaries = new HashMap<String, String>();
+		    summaries =  new ArrayList<ChapterSummary>();
 		    Boolean isChapterReference = false;
 		    for (int i = 0; i < nodeList.getLength(); i++) {
 		        Node cell = nodeList.item(i);
@@ -99,7 +93,8 @@ public class WhereInTheWord {
 		            } 
 		            else {
 		            	text = cellContents;
-		            	summaries.put(chapter, text);
+		            	ChapterSummary summary = new ChapterSummary(chapter, text);
+		            	summaries.add(summary);
 		            }
 		        }
 		    }
@@ -115,18 +110,20 @@ public class WhereInTheWord {
 		GUI gui = new GUI();
 		
 		
-		cardLayout    = new CardLayout();
+		cardLayout = new CardLayout();
+		cardPanel  = new JPanel(cardLayout);
 		
-		cardPanel     = new JPanel(cardLayout);
-		defaultPanel  = new DefaultPanel();
-		questionPanel = new QuestionPanel();
-		answerPanel   = new AnswerPanel();
+		defaultPanel           = new DefaultPanel();
+		scriptureQuestionPanel = new ScriptureQuestionPanel();
+		summaryQuestionPanel   = new SummaryQuestionPanel();
+		answerPanel            = new AnswerPanel();
 		
-		cardPanel.add(defaultPanel,  DEFAULTPANEL);
-		cardPanel.add(questionPanel, QUESTIONPANEL);
-		cardPanel.add(answerPanel,   ANSWERPANEL);
+		cardPanel.add(defaultPanel,           DEFAULTPANEL);
+		cardPanel.add(scriptureQuestionPanel, SCRIPTUREQUESTIONPANEL);
+		cardPanel.add(summaryQuestionPanel,   SUMMARYQUESTIONPANEL);
+		cardPanel.add(answerPanel,            ANSWERPANEL);
 		
-		cardLayout.show(cardPanel, DEFAULTPANEL);
+		cardLayout.show(cardPanel,            DEFAULTPANEL);
 		
 		gui.add(cardPanel);
 		gui.setVisible(true);
@@ -141,13 +138,23 @@ public class WhereInTheWord {
 	
 	public static void displayQuestionPanel() {
 		
-		cardLayout.show(cardPanel, QUESTIONPANEL);
-		
+		if (whichQuiz == "Scripture Quiz") {
+			cardLayout.show(cardPanel, SCRIPTUREQUESTIONPANEL);
+			scriptureQuestionPanel.generateNewQuestion();
+		} else if (whichQuiz == "Summary Quiz") {
+			cardLayout.show(cardPanel, SUMMARYQUESTIONPANEL);
+			summaryQuestionPanel.generateNewQuestion();
+		}
 	}
 	
 	public static void displayAnswerPanel() {
 		
-		answerPanel.getResultLabel().setText(questionPanel.getResultPhrase());
+		if (whichQuiz == "Scripture Quiz") {
+			answerPanel.getResultLabel().setText(scriptureQuestionPanel.getResultPhrase());
+		} else if (whichQuiz == "Summary Quiz") {
+			answerPanel.getResultLabel().setText(summaryQuestionPanel.getResultPhrase());
+		}
+		
 		cardLayout.show(cardPanel, ANSWERPANEL);
 		
 	}
@@ -183,12 +190,28 @@ public class WhereInTheWord {
 
 	
 	public static QuestionPanel getQuestionPanel() {
-		return questionPanel;
+		return scriptureQuestionPanel;
 	}
 
 	
-	public static void setQuestionPanel(QuestionPanel questionPanel) {
-		WhereInTheWord.questionPanel = questionPanel;
+	public static void setQuestionPanel(ScriptureQuestionPanel scriptureQuestionPanel) {
+		WhereInTheWord.scriptureQuestionPanel = scriptureQuestionPanel;
+	}
+	
+	public static QuestionPanel getScriptureQuestionPanel() {
+		return scriptureQuestionPanel;
+	}
+	
+	public static ArrayList<ChapterSummary> getSummaries() {
+		return summaries;
+	}
+	
+	public static String getWhichQuiz() {
+		return whichQuiz;
+	}
+	
+	public static void setWhichQuiz(String quizType) {
+		whichQuiz = quizType;
 	}
 	
 }

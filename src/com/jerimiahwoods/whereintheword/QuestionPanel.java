@@ -1,40 +1,28 @@
 package com.jerimiahwoods.whereintheword;
 
-import javax.swing.*;
-
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 
-
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 
 public class QuestionPanel extends JPanel {
 
-	private String answer = "";
-	private String correctAnswer = "";
-	private String resultPhrase = "";
+	String answer = "";
+	String correctAnswer = "";
+	String resultPhrase = "";
 	
-	private ArrayList<String> allLinesFromMasterFile;
-	private String randomBook;
-	private String randomChapter;
-	private String randomVerse;
-	private String randomText;
-	private String randomReference;
-	
-	private JTextArea questionText;
+	JTextArea questionText;
 	ArrayList<JRadioButton> radioButtons;
-	private JRadioButton optAnswerOne;
-	private JRadioButton optAnswerTwo;
-	private JRadioButton optAnswerThree;
-	private JRadioButton optAnswerFour;
-	private ButtonGroup answerButtonGroup;
-	private JButton confirmAnswerButton;
-	
+	JRadioButton optAnswerOne;
+	JRadioButton optAnswerTwo;
+	JRadioButton optAnswerThree;
+	JRadioButton optAnswerFour;
+	ButtonGroup answerButtonGroup;
+	JButton confirmAnswerButton;
 	
 	public QuestionPanel() {
 		
@@ -55,24 +43,8 @@ public class QuestionPanel extends JPanel {
 		radioButtons.add(optAnswerTwo);
 		radioButtons.add(optAnswerThree);
 		radioButtons.add(optAnswerFour);
-		
-		final ButtonGroup answerButtonGroup = new ButtonGroup();
-		answerButtonGroup.add(optAnswerOne);
-		answerButtonGroup.add(optAnswerTwo);
-		answerButtonGroup.add(optAnswerThree);
-		answerButtonGroup.add(optAnswerFour);
 		    
 		confirmAnswerButton = new JButton("Confirm Answer");
-		confirmAnswerButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				
-				answer = answerButtonGroup.getSelection().getActionCommand();
-				checkAnswer();
-				WhereInTheWord.displayAnswerPanel();
-				
-			}
-		});
 		
 		this.add(questionText);
 		this.add(optAnswerOne);
@@ -80,53 +52,12 @@ public class QuestionPanel extends JPanel {
 		this.add(optAnswerThree);
 		this.add(optAnswerFour);
 		this.add(confirmAnswerButton);
-		
-		generateNewQuestion();
-		
 	}
-
-	public void generateNewQuestion() {
+	
+	public void checkAnswer() {
 		
-		Random randomizer = new Random();
-		int correctIndex = randomizer.nextInt(4);
-		
-		for (int i=0;i<radioButtons.size();i++){
-		    
-			JRadioButton button = radioButtons.get(i);
-			try {
-				generateRandomScripture();
-			}
-			catch (IOException e) {
-			    System.err.println("Caught IOException: " + e.getMessage());
-			}
-			
-			if (i == correctIndex) {
-				correctAnswer = randomReference;
-				button.setText(correctAnswer);
-				button.setActionCommand(correctAnswer);
-				questionText.setText(randomText);
-			}
-			else {
-				button.setText(randomReference);
-			}
-		}
-	}
-	public void generateRandomScripture() throws IOException {
-		
-		Random randomizer = new Random();
-		int randomVerseIndex = randomizer.nextInt(WhereInTheWord.getTotalVerses()) + 1;
-		
-		String randomLine = WhereInTheWord.getAllLinesFromMasterFile().get(randomVerseIndex);
-		String[] bookChapterVerseText = randomLine.split("\\|");
-		randomBook = bookChapterVerseText[0];
-		randomChapter = bookChapterVerseText[1];
-		randomVerse = bookChapterVerseText[2];
-		randomText = bookChapterVerseText[3];
-		randomReference = randomBook + " " + randomChapter + ":" + randomVerse;
-		
-	}
-
-	private void checkAnswer() {
+		System.out.println("You answered " + answer);
+		System.out.println("The correct Answer was " + correctAnswer);
 		
 		if (answer == correctAnswer ) {
 			resultPhrase = "Correct!";
@@ -136,53 +67,59 @@ public class QuestionPanel extends JPanel {
 		
 	}
 	
-// Getters and Setters
-	public ButtonGroup getAnswerButtonGroup() {
-		return answerButtonGroup;
-	}
-
-	public JRadioButton getOptAnswerOne() {
-		return optAnswerOne;
-	}
-
-	public void setOptAnswerOne(JRadioButton optAnswerOne) {
-		this.optAnswerOne = optAnswerOne;
-	}
-
-	public JRadioButton getOptAnswerTwo() {
-		return optAnswerTwo;
-	}
-
-	public void setOptAnswerTwo(JRadioButton optAnswerTwo) {
-		this.optAnswerTwo = optAnswerTwo;
-	}
-
-	public JRadioButton getOptAnswerThree() {
-		return optAnswerThree;
-	}
-
-	public void setOptAnswerThree(JRadioButton optAnswerThree) {
-		this.optAnswerThree = optAnswerThree;
-	}
-
-	public JRadioButton getOptAnswerFour() {
-		return optAnswerFour;
-	}
-
-	public void setOptAnswerFour(JRadioButton optAnswerFour) {
-		this.optAnswerFour = optAnswerFour;
-	}
-
-	
-	public String getResultPhrase() {
-		return resultPhrase;
-	}
-
-	
-	public void setResultPhrase(String resultPhrase) {
-		this.resultPhrase = resultPhrase;
+	public void generateNewQuestion() {
+		
 	}
 	
+	public void generateRandomAnswer() {
+		
+	}
 	
-	
+	// Getters and Setters
+		public ButtonGroup getAnswerButtonGroup() {
+			return answerButtonGroup;
+		}
+
+		public JRadioButton getOptAnswerOne() {
+			return optAnswerOne;
+		}
+
+		public void setOptAnswerOne(JRadioButton optAnswerOne) {
+			this.optAnswerOne = optAnswerOne;
+		}
+
+		public JRadioButton getOptAnswerTwo() {
+			return optAnswerTwo;
+		}
+
+		public void setOptAnswerTwo(JRadioButton optAnswerTwo) {
+			this.optAnswerTwo = optAnswerTwo;
+		}
+
+		public JRadioButton getOptAnswerThree() {
+			return optAnswerThree;
+		}
+
+		public void setOptAnswerThree(JRadioButton optAnswerThree) {
+			this.optAnswerThree = optAnswerThree;
+		}
+
+		public JRadioButton getOptAnswerFour() {
+			return optAnswerFour;
+		}
+
+		public void setOptAnswerFour(JRadioButton optAnswerFour) {
+			this.optAnswerFour = optAnswerFour;
+		}
+
+		
+		public String getResultPhrase() {
+			return resultPhrase;
+		}
+
+		
+		public void setResultPhrase(String resultPhrase) {
+			this.resultPhrase = resultPhrase;
+		}
+
 }

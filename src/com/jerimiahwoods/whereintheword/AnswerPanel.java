@@ -40,7 +40,7 @@ public class AnswerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				WhereInTheWord.displayQuestionPanel();
-				WhereInTheWord.getQuestionPanel().generateNewQuestion();
+				WhereInTheWord.getScriptureQuestionPanel().generateNewQuestion();
 				
 			}
 		});
