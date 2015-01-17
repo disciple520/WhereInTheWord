@@ -11,36 +11,39 @@ import javax.swing.JPanel;
 
 import com.jerimiahwoods.whereintheword.WhereInTheWord;
 
-public class DefaultPanel extends JPanel {
+public class HomePanel extends JPanel {
 
-	private JLabel lblTitle;
-	private JButton startScriptureQuizButton;
-	private JButton startSummaryQuizButton;
+	final public String BIBLE_VERSE_QUIZ = WhereInTheWord.BIBLE_VERSE_QUIZ;
+	final public String CHAPTER_SUMMARY_QUIZ = WhereInTheWord.CHAPTER_SUMMARY_QUIZ;
+	
+	private JLabel  lblTitle;
+	private JButton startBibleVerseQuizButton;
+	private JButton startChapterSummaryQuizButton;
 	private JButton quitButton;
 
-	public DefaultPanel() {
+	public HomePanel() {
 		
 		this.setBackground(Color.lightGray);
 		lblTitle = new JLabel("Where in the Word?");
 		lblTitle.setFont(new Font("Serif", Font.PLAIN, 30));
 		
-		startScriptureQuizButton = new JButton("Start Scripture Quiz");
-		startScriptureQuizButton.addActionListener(new ActionListener() {
+		startBibleVerseQuizButton = new JButton("Start Bible Verse Quiz");
+		startBibleVerseQuizButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				WhereInTheWord.setWhichQuiz("Scripture Quiz");
+				WhereInTheWord.setCurrentQuizType(BIBLE_VERSE_QUIZ);
 				WhereInTheWord.displayQuestionPanel();
 				
 			}
 		});
 		
-		startSummaryQuizButton = new JButton("Start Summary Quiz");
-		startSummaryQuizButton.addActionListener(new ActionListener() {
+		startChapterSummaryQuizButton = new JButton("Start ChapterSummary Quiz");
+		startChapterSummaryQuizButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				WhereInTheWord.setWhichQuiz("Summary Quiz");
+				WhereInTheWord.setCurrentQuizType(CHAPTER_SUMMARY_QUIZ);
 				WhereInTheWord.displayQuestionPanel();
 				
 			}
@@ -57,8 +60,8 @@ public class DefaultPanel extends JPanel {
 		});
 		
 		this.add(lblTitle);
-		this.add(startScriptureQuizButton);
-		this.add(startSummaryQuizButton);
+		this.add(startBibleVerseQuizButton);
+		this.add(startChapterSummaryQuizButton);
 		this.add(quitButton);
 		
 	}
@@ -72,11 +75,11 @@ public class DefaultPanel extends JPanel {
 	}
 
 	public JButton getBtnStartQuiz() {
-		return startScriptureQuizButton;
+		return startBibleVerseQuizButton;
 	}
 
 	public void setBtnStartQuiz(JButton btnStartQuiz) {
-		this.startScriptureQuizButton = btnStartQuiz;
+		this.startBibleVerseQuizButton = btnStartQuiz;
 	}
 
 }

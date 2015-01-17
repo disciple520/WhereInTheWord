@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public class AnswerPanel extends JPanel {
 	
-	private JLabel resultLabel;
+	private JLabel  resultLabel;
 	private JButton nextQuestionButton;
 	private JButton quitButton;
 	
@@ -40,7 +40,7 @@ public class AnswerPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				
 				WhereInTheWord.displayQuestionPanel();
-				WhereInTheWord.getScriptureQuestionPanel().generateNewQuestion();
+				WhereInTheWord.getBibleVerseQuestionPanel().generateNewQuestion();
 				
 			}
 		});
@@ -48,9 +48,34 @@ public class AnswerPanel extends JPanel {
 		
 	}
 
-// Getters and Setters
+	
+	// *********Getters and Setters********* //
+	
 	public JLabel getResultLabel() {
 		return resultLabel;
 	}
+
+	public void setResultLabel(JLabel resultLabel) {
+		this.resultLabel = resultLabel;
+	}
+
+	public JButton getNextQuestionButton() {
+		return nextQuestionButton;
+	}
+
+	public void setNextQuestionButton(JButton nextQuestionButton) {
+		this.nextQuestionButton = nextQuestionButton;
+	}
+
+	public JButton getQuitButton() {
+		return quitButton;
+	}
+
+	public void setQuitButton(JButton quitButton) {
+		this.quitButton = quitButton;
+	}
+
+
+	
 
 }

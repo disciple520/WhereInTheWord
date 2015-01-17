@@ -18,112 +18,130 @@ import org.apache.xml.dtm.ref.DTMNodeList;
 
 public class WhereInTheWord {
 
-	final static String DEFAULTPANEL = "Card to display welcome panel";
-    final static String SCRIPTUREQUESTIONPANEL    = "Card to display quiz questions about specific verses";
-    final static String SUMMARYQUESTIONPANEL = "Card to display quiz question about chapter summaries";
-    final static String ANSWERPANEL  = "Card to display quiz answers";
+	final static String FILE_CONTAINING_BIBLE_VERSES        = "Bible Verses";
+	final static String FILE_CONTAINING_CHAPTER_SUMMARIES   = "Chapter Summaries.ods";
+	
+	final static String HOME_PANEL                      = "Card to display main panel";
+    final static String BIBLE_VERSE_QUESTION_PANEL      = "Card to display questions about bible verses";
+    final static String CHAPTER_SUMMARY_QUESTION_PANEL  = "Card to display questions about chapter summaries";
+    final static String ANSWER_PANEL                    = "Card to display answers";
+    
+    final public static String BIBLE_VERSE_QUIZ     = "Bible verse quiz type";
+    final public static String CHAPTER_SUMMARY_QUIZ = "Chapter summary quiz type";
     
     private static CardLayout cardLayout;
     
-    private static JPanel cardPanel;
-    private static DefaultPanel defaultPanel;
-	private static QuestionPanel scriptureQuestionPanel;
-	private static QuestionPanel summaryQuestionPanel;
-	private static AnswerPanel answerPanel;
+    private static JPanel                      cardPanel;
+    private static HomePanel                   homePanel;
+	private static BibleVerseQuestionPanel     bibleVerseQuestionPanel;
+	private static ChapterSummaryQuestionPanel chapterSummaryQuestionPanel;
+	private static AnswerPanel                 answerPanel;
 	
-	private static String whichQuiz = "Scripture Quiz";
+	private static String currentQuizType = "Bible Verse Quiz";
 	
-	private static ArrayList<String> allLinesFromMasterFile;
-	private static int totalVerses;
-
-	private static ArrayList<ChapterSummary> summaries;
+	private static ArrayList<BibleVerse>     bibleVerses;
+	private static ArrayList<ChapterSummary> chapterSummaries;
     
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 	
-		try {
-			loadData();	
-		}
-		catch (IOException e) {
-		    System.err.println("Caught IOException: " + e.getMessage());
-		}
-		catch (Exception e) {
-			System.err.println("Caught Exception: " + e.getMessage());
-		}
-		
+		loadData();
 		buildUI();
 		
 	}
 
 	public static void loadData() throws Exception {
 		
-		FileReader verseReader = new FileReader("Master Verse List");
-		BufferedReader bufferedReader = new BufferedReader(verseReader);
-		
-		allLinesFromMasterFile = new ArrayList<String>();
-		
-		String line;
-		totalVerses = 0;
-		while ((line = bufferedReader.readLine()) != null) {
-			allLinesFromMasterFile.add(line);
-			totalVerses++;
-		}
-		
-		FileReader summaryReader = new FileReader("Chapter Summary Spreadsheet.ods");
-		bufferedReader = new BufferedReader(summaryReader);
+		loadBibleVerses();
+		loadChapterSummaries();
 	
-		bufferedReader.close();
-		verseReader.close();
-	
-		try {
-			OdfDocument chapterSummariesSpreadsheet = OdfDocument.loadDocument(new File("Chapter Summary Spreadsheet.ods"));
-			OdfFileDom summariesContent = chapterSummariesSpreadsheet.getContentDom();
-			XPath xpath = summariesContent.getXPath();
-		    DTMNodeList nodeList = (DTMNodeList) xpath.evaluate("//table:table-row/table:table-cell", summariesContent, XPathConstants.NODESET);
-		    String chapter = "";
-		    String text = "";
-		    summaries =  new ArrayList<ChapterSummary>();
-		    Boolean isChapterReference = false;
-		    for (int i = 0; i < nodeList.getLength(); i++) {
-		        Node cell = nodeList.item(i);
-		        String cellContents = cell.getTextContent();
-		        if (!cell.getTextContent().isEmpty()) {
-		        	isChapterReference = !isChapterReference;
-		            if (isChapterReference) {
-		            	chapter = cellContents;
-		            } 
-		            else {
-		            	text = cellContents;
-		            	ChapterSummary summary = new ChapterSummary(chapter, text);
-		            	summaries.add(summary);
-		            }
-		        }
-		    }
-		} catch (Exception ex) {
-		        System.out.println(ex.getMessage());
-		}
 	}
 
-
+	public static void loadBibleVerses() throws IOException {
+		
+		bibleVerses = new ArrayList<BibleVerse>();
+		
+		FileReader verseReader = new FileReader(FILE_CONTAINING_BIBLE_VERSES);
+		BufferedReader bufferedReader = new BufferedReader(verseReader);
+		
+		String lineFromBibleVerseFile = "";    
+		while ((lineFromBibleVerseFile = bufferedReader.readLine()) != null) {
+			
+			String[] bibleVerseElements = lineFromBibleVerseFile.split("\\|");
+			String book = bibleVerseElements[0];
+			String chapter = bibleVerseElements[1];
+			String verseNumber = bibleVerseElements[2];
+			String text = bibleVerseElements[3];
+			
+			bibleVerses.add(new BibleVerse(book, chapter, verseNumber, text));
+		}
+		
+		bufferedReader.close();
+		
+	}
+	
+	public static void loadChapterSummaries() throws Exception {
+	
+	    DTMNodeList dataFromSummariesFile = readFromSummariesFile();
+	    populateSummariesArray(dataFromSummariesFile);
+	    
+	}
+	
+	public static DTMNodeList readFromSummariesFile() throws Exception {
+		
+		// Using ODFToolkit //
+		OdfDocument chapterSummariesSpreadsheet = OdfDocument.loadDocument(new File(FILE_CONTAINING_CHAPTER_SUMMARIES));
+		OdfFileDom summariesContent = chapterSummariesSpreadsheet.getContentDom();
+		XPath xpath = summariesContent.getXPath();
+		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate("//table:table-row/table:table-cell", summariesContent, XPathConstants.NODESET); //Reads empty cells after each row of data
+		
+		return nodeList;
+	}
+	
+	public static void populateSummariesArray(DTMNodeList nodeList) {
+		
+		String scriptureReference = "";
+		String text = "";
+		chapterSummaries =  new ArrayList<ChapterSummary>();
+		Boolean nodeContainsScriptureReference = false;
+	    
+	    for (int i = 0; i < nodeList.getLength(); i++) {
+	    	
+	    	Node node = nodeList.item(i);
+		    String nodeContent = node.getTextContent();
+	        if (!node.getTextContent().isEmpty()) { 
+	        	
+	        	nodeContainsScriptureReference = !nodeContainsScriptureReference;
+	        	
+		        if (nodeContainsScriptureReference) {
+		           	scriptureReference = nodeContent;
+		        } 
+		        else if (!nodeContainsScriptureReference){
+		        	text = nodeContent;
+		            ChapterSummary chapterSummary = new ChapterSummary(scriptureReference, text);
+		            chapterSummaries.add(chapterSummary);
+		        }
+	        }
+		}
+	}
 	
 	public static void buildUI() {
 		
 		GUI gui = new GUI();
-		
-		
+			
 		cardLayout = new CardLayout();
 		cardPanel  = new JPanel(cardLayout);
 		
-		defaultPanel           = new DefaultPanel();
-		scriptureQuestionPanel = new ScriptureQuestionPanel();
-		summaryQuestionPanel   = new SummaryQuestionPanel();
-		answerPanel            = new AnswerPanel();
+		homePanel                   = new HomePanel();
+		bibleVerseQuestionPanel     = new BibleVerseQuestionPanel();
+		chapterSummaryQuestionPanel = new ChapterSummaryQuestionPanel();
+		answerPanel                 = new AnswerPanel();
 		
-		cardPanel.add(defaultPanel,           DEFAULTPANEL);
-		cardPanel.add(scriptureQuestionPanel, SCRIPTUREQUESTIONPANEL);
-		cardPanel.add(summaryQuestionPanel,   SUMMARYQUESTIONPANEL);
-		cardPanel.add(answerPanel,            ANSWERPANEL);
+		cardPanel.add(homePanel,                   HOME_PANEL);
+		cardPanel.add(bibleVerseQuestionPanel,     BIBLE_VERSE_QUESTION_PANEL);
+		cardPanel.add(chapterSummaryQuestionPanel, CHAPTER_SUMMARY_QUESTION_PANEL);
+		cardPanel.add(answerPanel,                 ANSWER_PANEL);
 		
-		cardLayout.show(cardPanel,            DEFAULTPANEL);
+		cardLayout.show(cardPanel, HOME_PANEL);
 		
 		gui.add(cardPanel);
 		gui.setVisible(true);
@@ -132,86 +150,109 @@ public class WhereInTheWord {
 	
 	public static void displayDefaultPanel() {
 		
-		cardLayout.show(cardPanel, DEFAULTPANEL);
+		cardLayout.show(cardPanel, HOME_PANEL);
 		
 	}
 	
 	public static void displayQuestionPanel() {
 		
-		if (whichQuiz == "Scripture Quiz") {
-			cardLayout.show(cardPanel, SCRIPTUREQUESTIONPANEL);
-			scriptureQuestionPanel.generateNewQuestion();
-		} else if (whichQuiz == "Summary Quiz") {
-			cardLayout.show(cardPanel, SUMMARYQUESTIONPANEL);
-			summaryQuestionPanel.generateNewQuestion();
+		if (currentQuizType == BIBLE_VERSE_QUIZ) {
+			cardLayout.show(cardPanel, BIBLE_VERSE_QUESTION_PANEL);
+			bibleVerseQuestionPanel.generateNewQuestion();
+		} else if (currentQuizType == CHAPTER_SUMMARY_QUIZ) {
+			cardLayout.show(cardPanel, CHAPTER_SUMMARY_QUESTION_PANEL);
+			chapterSummaryQuestionPanel.generateNewQuestion();
 		}
 	}
 	
 	public static void displayAnswerPanel() {
 		
-		if (whichQuiz == "Scripture Quiz") {
-			answerPanel.getResultLabel().setText(scriptureQuestionPanel.getResultPhrase());
-		} else if (whichQuiz == "Summary Quiz") {
-			answerPanel.getResultLabel().setText(summaryQuestionPanel.getResultPhrase());
+		if (currentQuizType == BIBLE_VERSE_QUIZ) {
+			answerPanel.getResultLabel().setText(bibleVerseQuestionPanel.getResultPhrase());
+		} else if (currentQuizType == CHAPTER_SUMMARY_QUIZ) {
+			answerPanel.getResultLabel().setText(chapterSummaryQuestionPanel.getResultPhrase());
 		}
 		
-		cardLayout.show(cardPanel, ANSWERPANEL);
+		cardLayout.show(cardPanel, ANSWER_PANEL);
 		
 	}
-
-	// Getters and Setters
-	public static JPanel getCardPanel() {
-		return cardPanel;
-	}
+	
+// *********Getters and Setters********* //
+	
 	
 	public static CardLayout getCardLayout() {
 		return cardLayout;
 	}
 
-	
-	public static ArrayList<String> getAllLinesFromMasterFile() {
-		return allLinesFromMasterFile;
+	public static void setCardLayout(CardLayout cardLayout) {
+		WhereInTheWord.cardLayout = cardLayout;
 	}
 
-	
-	public static void setAllLinesFromMasterFile(
-			ArrayList<String> allLinesFromMasterFile) {
-		WhereInTheWord.allLinesFromMasterFile = allLinesFromMasterFile;
+	public static JPanel getCardPanel() {
+		return cardPanel;
 	}
 
-	public static int getTotalVerses() {
-		return totalVerses;
+	public static void setCardPanel(JPanel cardPanel) {
+		WhereInTheWord.cardPanel = cardPanel;
 	}
 
-	public static void setTotalVerses(int totalVerses) {
-		
-		WhereInTheWord.totalVerses = totalVerses;
+	public static HomePanel getHomePanel() {
+		return homePanel;
 	}
 
-	
-	public static QuestionPanel getQuestionPanel() {
-		return scriptureQuestionPanel;
+	public static void setHomePanel(HomePanel homePanel) {
+		WhereInTheWord.homePanel = homePanel;
 	}
 
-	
-	public static void setQuestionPanel(ScriptureQuestionPanel scriptureQuestionPanel) {
-		WhereInTheWord.scriptureQuestionPanel = scriptureQuestionPanel;
+	public static BibleVerseQuestionPanel getBibleVerseQuestionPanel() {
+		return bibleVerseQuestionPanel;
 	}
-	
-	public static QuestionPanel getScriptureQuestionPanel() {
-		return scriptureQuestionPanel;
+
+	public static void setBibleVerseQuestionPanel(BibleVerseQuestionPanel bibleVerseQuestionPanel) {
+		WhereInTheWord.bibleVerseQuestionPanel = bibleVerseQuestionPanel;
 	}
-	
-	public static ArrayList<ChapterSummary> getSummaries() {
-		return summaries;
+
+	public static ChapterSummaryQuestionPanel getChapterSummaryQuestionPanel() {
+		return chapterSummaryQuestionPanel;
 	}
-	
+
+	public static void setChapterSummaryQuestionPanel(ChapterSummaryQuestionPanel chapterSummaryQuestionPanel) {
+		WhereInTheWord.chapterSummaryQuestionPanel = chapterSummaryQuestionPanel;
+	}
+
+	public static AnswerPanel getAnswerPanel() {
+		return answerPanel;
+	}
+
+	public static void setAnswerPanel(AnswerPanel answerPanel) {
+		WhereInTheWord.answerPanel = answerPanel;
+	}
+
 	public static String getWhichQuiz() {
-		return whichQuiz;
+		return currentQuizType;
 	}
+
+	public static void setCurrentQuizType(String currentQuizType) {
+		WhereInTheWord.currentQuizType = currentQuizType;
+	}
+
+	public static ArrayList<BibleVerse> getBibleVerses() {
+		return bibleVerses;
+	}
+
+	public static void setBibleVerses(ArrayList<BibleVerse> bibleVerses) {
+		WhereInTheWord.bibleVerses = bibleVerses;
+	}
+
+	public static ArrayList<ChapterSummary> getChapterSummaries() {
+		return chapterSummaries;
+	}
+
+	public static void setChapterSummaries(ArrayList<ChapterSummary> chapterSummaries) {
+		WhereInTheWord.chapterSummaries = chapterSummaries;
+	}
+
+
 	
-	public static void setWhichQuiz(String quizType) {
-		whichQuiz = quizType;
-	}
 	
 }

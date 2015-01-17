@@ -18,7 +18,7 @@ public class UnitTests {
 	public void panelIsConstructedProperly() {
 		
 		//given
-		DefaultPanel panel = new DefaultPanel();
+		HomePanel panel = new HomePanel();
 		
 		//then
 		assert panel.isVisible();
