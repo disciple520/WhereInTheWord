@@ -17,9 +17,6 @@ import org.w3c.dom.Node;
 import org.apache.xml.dtm.ref.DTMNodeList;
 
 public class WhereInTheWord {
-
-	final static String FILE_CONTAINING_BIBLE_VERSES        = "Bible Verses";
-	final static String FILE_CONTAINING_CHAPTER_SUMMARIES   = "Chapter Summaries.ods";
 	
 	final static String HOME_PANEL                      = "Card to display main panel";
     final static String BIBLE_VERSE_QUESTION_PANEL      = "Card to display questions about bible verses";
@@ -44,89 +41,21 @@ public class WhereInTheWord {
     
 	public static void main(String[] args) throws Exception {
 	
-		loadData();
+		loadAllQuizObjects();
 		buildUI();
 		
 	}
 
-	public static void loadData() throws Exception {
+	public static void loadAllQuizObjects() throws Exception {
 		
-		loadBibleVerses();
-		loadChapterSummaries();
+		bibleVerses = BibleVerseLoader.loadVerses();
+		chapterSummaries = new ChapterSummaryLoader().loadChapterSummaries();
 	
-	}
-
-	public static void loadBibleVerses() throws IOException {
-		
-		bibleVerses = new ArrayList<BibleVerse>();
-		
-		FileReader verseReader = new FileReader(FILE_CONTAINING_BIBLE_VERSES);
-		BufferedReader bufferedReader = new BufferedReader(verseReader);
-		
-		String lineFromBibleVerseFile = "";    
-		while ((lineFromBibleVerseFile = bufferedReader.readLine()) != null) {
-			
-			String[] bibleVerseElements = lineFromBibleVerseFile.split("\\|");
-			String book = bibleVerseElements[0];
-			String chapter = bibleVerseElements[1];
-			String verseNumber = bibleVerseElements[2];
-			String text = bibleVerseElements[3];
-			
-			bibleVerses.add(new BibleVerse(book, chapter, verseNumber, text));
-		}
-		
-		bufferedReader.close();
-		
-	}
-	
-	public static void loadChapterSummaries() throws Exception {
-	
-	    DTMNodeList dataFromSummariesFile = readFromSummariesFile();
-	    populateSummariesArray(dataFromSummariesFile);
-	    
-	}
-	
-	public static DTMNodeList readFromSummariesFile() throws Exception {
-		
-		// Using ODFToolkit //
-		OdfDocument chapterSummariesSpreadsheet = OdfDocument.loadDocument(new File(FILE_CONTAINING_CHAPTER_SUMMARIES));
-		OdfFileDom summariesContent = chapterSummariesSpreadsheet.getContentDom();
-		XPath xpath = summariesContent.getXPath();
-		DTMNodeList nodeList = (DTMNodeList) xpath.evaluate("//table:table-row/table:table-cell", summariesContent, XPathConstants.NODESET); //Reads empty cells after each row of data
-		
-		return nodeList;
-	}
-	
-	public static void populateSummariesArray(DTMNodeList nodeList) {
-		
-		String scriptureReference = "";
-		String text = "";
-		chapterSummaries =  new ArrayList<ChapterSummary>();
-		Boolean nodeContainsScriptureReference = false;
-	    
-	    for (int i = 0; i < nodeList.getLength(); i++) {
-	    	
-	    	Node node = nodeList.item(i);
-		    String nodeContent = node.getTextContent();
-	        if (!node.getTextContent().isEmpty()) { 
-	        	
-	        	nodeContainsScriptureReference = !nodeContainsScriptureReference;
-	        	
-		        if (nodeContainsScriptureReference) {
-		           	scriptureReference = nodeContent;
-		        } 
-		        else if (!nodeContainsScriptureReference){
-		        	text = nodeContent;
-		            ChapterSummary chapterSummary = new ChapterSummary(scriptureReference, text);
-		            chapterSummaries.add(chapterSummary);
-		        }
-	        }
-		}
 	}
 	
 	public static void buildUI() {
 		
-		GUI gui = new GUI();
+		GUI gui    = new GUI();
 			
 		cardLayout = new CardLayout();
 		cardPanel  = new JPanel(cardLayout);
@@ -148,7 +77,7 @@ public class WhereInTheWord {
 		
 	}
 	
-	public static void displayDefaultPanel() {
+	public static void displayHomePanel() {
 		
 		cardLayout.show(cardPanel, HOME_PANEL);
 		
@@ -176,7 +105,7 @@ public class WhereInTheWord {
 		cardLayout.show(cardPanel, ANSWER_PANEL);
 		
 	}
-	
+
 // *********Getters and Setters********* //
 	
 	

@@ -10,9 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 
-public class GenericQuestionPanel extends JPanel {
+public abstract class GenericQuestionPanel extends JPanel {
 
 	int numberOfAnswerOptions = 4;
+	
+	QuizzableItem[] randomQuizzableItemArray;
 	
 	String userAnswer    = "";
 	String correctAnswer = "";
@@ -43,6 +45,12 @@ public class GenericQuestionPanel extends JPanel {
 		answerThreeRadioButton = new JRadioButton();
 		answerFourRadioButton = new JRadioButton();
 		
+		answerButtonGroup = new ButtonGroup();
+		answerButtonGroup.add(answerOneRadioButton);
+		answerButtonGroup.add(answerTwoRadioButton);
+		answerButtonGroup.add(answerThreeRadioButton);
+		answerButtonGroup.add(answerFourRadioButton);
+		
 		radioButtons = new ArrayList<JRadioButton>();
 		radioButtons.add(answerOneRadioButton);
 		radioButtons.add(answerTwoRadioButton);
@@ -57,6 +65,12 @@ public class GenericQuestionPanel extends JPanel {
 		this.add(answerThreeRadioButton);
 		this.add(answerFourRadioButton);
 		this.add(confirmAnswerButton);
+	}
+	
+	public void checkAndDisplayAnswer() {
+		userAnswer = answerButtonGroup.getSelection().getActionCommand();
+		checkAnswer();
+		WhereInTheWord.displayAnswerPanel();
 	}
 	
 	public void checkAnswer() {
@@ -79,6 +93,8 @@ public class GenericQuestionPanel extends JPanel {
 		
 		int indexWhereCorrectAnswerWillBe = (new Random()).nextInt(numberOfAnswerOptions);
 		
+		generateAllAnswerOptions();
+		
 		for (int i=0;i<radioButtons.size();i++){
 			
 			JRadioButton currentButton = radioButtons.get(i);
@@ -98,12 +114,20 @@ public class GenericQuestionPanel extends JPanel {
 		}	
 	}
 	
-	// *********Getters and Setters********* //
-	
-	public QuizzableItem generateRandomAnswer() {
+	protected QuizzableItem generateRandomAnswer() {
 		return null;
 	}
-
+	
+	protected void generateAllAnswerOptions() {
+		
+		
+		
+	}
+	
+	
+	
+	// *********Getters and Setters********* //
+	
 	public int getNumberOfAnswerOptions() {
 		return numberOfAnswerOptions;
 	}

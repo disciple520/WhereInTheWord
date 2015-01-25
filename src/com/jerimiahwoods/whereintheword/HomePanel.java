@@ -37,6 +37,7 @@ public class HomePanel extends JPanel {
 				
 			}
 		});
+		//startBibleVerseQuizButton.setName("startBibleVerseQuizButton");
 		
 		startChapterSummaryQuizButton = new JButton("Start ChapterSummary Quiz");
 		startChapterSummaryQuizButton.addActionListener(new ActionListener() {

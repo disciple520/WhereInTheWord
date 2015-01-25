@@ -2,10 +2,14 @@ package com.jerimiahwoods.whereintheword;
 
 public class ChapterSummary extends QuizzableItem {
 
-	public ChapterSummary(String chapterReference, String summaryText) {
+	public ChapterSummary(String summaryText, String chapterReference) {
 		
-		super(chapterReference, summaryText);
+		super(summaryText, chapterReference);
 		
+	}
+	
+	public String toString() {
+		return text + " (" + scriptureReference + ")";
 	}
 
 }

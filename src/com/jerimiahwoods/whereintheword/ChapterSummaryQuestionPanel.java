@@ -7,7 +7,6 @@ import java.util.Random;
 
 import javax.swing.ButtonGroup;
 
-
 public class ChapterSummaryQuestionPanel extends GenericQuestionPanel {
 
 	private ArrayList<ChapterSummary> chapterSummaries;
@@ -32,9 +31,6 @@ public class ChapterSummaryQuestionPanel extends GenericQuestionPanel {
 				
 			}
 		});
-		
-		generateNewQuestion();
-		
 	}
 
 	public ChapterSummary generateRandomAnswer() {

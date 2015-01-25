@@ -18,36 +18,33 @@ public class AnswerPanel extends JPanel {
 		
 		this.setBackground(Color.lightGray);
 		
-		resultLabel = new JLabel();
+		resultLabel        = new JLabel();
 		nextQuestionButton = new JButton("Next Question");
-		quitButton = new JButton("Quit to Main Menu");
+		quitButton         = new JButton("Quit to Main Menu");
 		
 		this.add(resultLabel);
 		this.add(nextQuestionButton);
 		this.add(quitButton);
 		
 		quitButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				
-				WhereInTheWord.displayDefaultPanel();
-				
-			}
+			public void actionPerformed(ActionEvent e) {WhereInTheWord.displayHomePanel();}
 		});
 		
 		nextQuestionButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				
-				WhereInTheWord.displayQuestionPanel();
-				WhereInTheWord.getBibleVerseQuestionPanel().generateNewQuestion();
-				
-			}
+			public void actionPerformed(ActionEvent e) {WhereInTheWord.displayQuestionPanel();}
 		});
-		
-		
 	}
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// *********Getters and Setters********* //
 	

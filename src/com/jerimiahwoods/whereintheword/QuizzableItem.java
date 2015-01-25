@@ -2,20 +2,33 @@ package com.jerimiahwoods.whereintheword;
 
 public class QuizzableItem {
 	
-	protected String scriptureReference;
 	protected String text;
+	protected String scriptureReference;
+	
 	
 	public QuizzableItem() {
 		
 	}
 	
-	public QuizzableItem(String scriptureReference, String text) {
+	public QuizzableItem(String text, String scriptureReference) {
 		
 		this.scriptureReference = scriptureReference;
 		this.text = text;
 		
 	}
+	
+	public String toString() {
+		return text + " - " + scriptureReference;
+	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 	public String getScriptureReference() {
 		return scriptureReference;
 	}
