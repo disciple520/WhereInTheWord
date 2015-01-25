@@ -22,6 +22,16 @@ public class BibleVerse extends QuizzableItem{
 		
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// *********Getters and Setters********* //
 	public String getBook() {
 		return book;
 	}

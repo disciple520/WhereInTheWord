@@ -3,11 +3,9 @@ package com.jerimiahwoods.whereintheword;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Collections;
 
-import javax.swing.ButtonGroup;
-
-public class ChapterSummaryQuestionPanel extends GenericQuestionPanel {
+public class ChapterSummaryQuestionPanel extends MultipleChoiceQuestionPanel {
 
 	private ArrayList<ChapterSummary> chapterSummaries;
 	
@@ -15,30 +13,25 @@ public class ChapterSummaryQuestionPanel extends GenericQuestionPanel {
 		
 		chapterSummaries = WhereInTheWord.getChapterSummaries();
 		
-		final ButtonGroup answerButtonGroup = new ButtonGroup();
-		answerButtonGroup.add(answerOneRadioButton);
-		answerButtonGroup.add(answerTwoRadioButton);
-		answerButtonGroup.add(answerThreeRadioButton);
-		answerButtonGroup.add(answerFourRadioButton);
-		
 		confirmAnswerButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				
-				userAnswer = answerButtonGroup.getSelection().getActionCommand();
-				checkAnswer();
-				WhereInTheWord.displayAnswerPanel();
-				
+				checkAndDisplayAnswer();
 			}
 		});
 	}
 
-	public ChapterSummary generateRandomAnswer() {
+	public ArrayList<QuizzableItem> generateRandomAnswers() {
 		
-		Random randomizer = new Random();
-		int randomSummaryIndex = randomizer.nextInt(chapterSummaries.size());
+		Collections.shuffle(chapterSummaries);
 		
-		return chapterSummaries.get(randomSummaryIndex);
+		ArrayList<QuizzableItem> randomAnswers = new ArrayList<QuizzableItem>();
+		
+		for (int i=0; i<4; i++){
+			randomAnswers.add(chapterSummaries.get(i));
+		}
+		
+		return randomAnswers;
 		
 	}
 	

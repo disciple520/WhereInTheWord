@@ -9,12 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.jerimiahwoods.whereintheword.WhereInTheWord;
-
 public class HomePanel extends JPanel {
 
-	final public String BIBLE_VERSE_QUIZ = WhereInTheWord.BIBLE_VERSE_QUIZ;
-	final public String CHAPTER_SUMMARY_QUIZ = WhereInTheWord.CHAPTER_SUMMARY_QUIZ;
+	final public String BIBLE_VERSE_QUIZ     = UIManager.BIBLE_VERSE_QUIZ;
+	final public String CHAPTER_SUMMARY_QUIZ = UIManager.CHAPTER_SUMMARY_QUIZ;
 	
 	private JLabel  lblTitle;
 	private JButton startBibleVerseQuizButton;
@@ -32,20 +30,19 @@ public class HomePanel extends JPanel {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				WhereInTheWord.setCurrentQuizType(BIBLE_VERSE_QUIZ);
-				WhereInTheWord.displayQuestionPanel();
+				UIManager.setCurrentQuizType(BIBLE_VERSE_QUIZ);
+				UIManager.displayQuestionPanel();
 				
 			}
 		});
-		//startBibleVerseQuizButton.setName("startBibleVerseQuizButton");
 		
 		startChapterSummaryQuizButton = new JButton("Start ChapterSummary Quiz");
 		startChapterSummaryQuizButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				
-				WhereInTheWord.setCurrentQuizType(CHAPTER_SUMMARY_QUIZ);
-				WhereInTheWord.displayQuestionPanel();
+				UIManager.setCurrentQuizType(CHAPTER_SUMMARY_QUIZ);
+				UIManager.displayQuestionPanel();
 				
 			}
 		});

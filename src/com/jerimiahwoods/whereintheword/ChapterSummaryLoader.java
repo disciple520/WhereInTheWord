@@ -17,7 +17,7 @@ public class ChapterSummaryLoader {
 	
 	private static ArrayList<ChapterSummary> chapterSummaries;
 	
-	public ArrayList<ChapterSummary> loadChapterSummaries() throws Exception {
+	public static ArrayList<ChapterSummary> loadChapterSummaries() throws Exception {
 		
 	    DTMNodeList dataFromSummariesFile = readFromSummariesFile();
 	    populateSummariesArray(dataFromSummariesFile);
@@ -28,7 +28,6 @@ public class ChapterSummaryLoader {
 	
 	public static DTMNodeList readFromSummariesFile() throws Exception {
 		
-		// Using ODFToolkit //
 		OdfDocument chapterSummariesSpreadsheet = OdfDocument.loadDocument(new File(FILE_CONTAINING_CHAPTER_SUMMARIES));
 		OdfFileDom summariesContent = chapterSummariesSpreadsheet.getContentDom();
 		XPath xpath = summariesContent.getXPath();
@@ -40,28 +39,20 @@ public class ChapterSummaryLoader {
 	public static void populateSummariesArray(DTMNodeList dataFromSummariesFile) {
 		
 		chapterSummaries =  new ArrayList<ChapterSummary>();
-		String scriptureReference = "";
 		String text = "";
-		Boolean contentsOfDataItemIsScriptureReference = true;
+		String scriptureReference = "";
 	    
-	    for (int i = 0; i < dataFromSummariesFile.getLength(); i++) {
+	    for (int i = 0; i < dataFromSummariesFile.getLength() - 4; i+=3) { //every third node is empty, as well as 4 nodes at EOF
+
+	    	Node textNode = dataFromSummariesFile.item(i);
+	    	text = textNode.getTextContent();
 	    	
-	    	Node singleItemFromDataFile = dataFromSummariesFile.item(i);
-		    String contentsOfDataItem = singleItemFromDataFile.getTextContent();
-	        if (!singleItemFromDataFile.getTextContent().isEmpty()) { 
-	        	
-	        	contentsOfDataItemIsScriptureReference = !contentsOfDataItemIsScriptureReference; //Each alternating item is a Scripture Reference
-	        	
-		        if (contentsOfDataItemIsScriptureReference) {
-		           	scriptureReference = contentsOfDataItem;
-		        } 
-		        else if (!contentsOfDataItemIsScriptureReference){
-		        	text = contentsOfDataItem;
-		            ChapterSummary chapterSummary = new ChapterSummary(scriptureReference, text);
-		            chapterSummaries.add(chapterSummary);
-		        }
-	        }
-		}
+	    	Node scriptureReferenceNode = dataFromSummariesFile.item(i+1);
+		    scriptureReference = scriptureReferenceNode.getTextContent();
+		     	
+		    ChapterSummary chapterSummary = new ChapterSummary(text, scriptureReference);
+		    chapterSummaries.add(chapterSummary);
+		        
+	     }
 	}
-	
 }

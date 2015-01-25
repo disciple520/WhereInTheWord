@@ -7,20 +7,18 @@ public class QuizzableItem {
 	
 	
 	public QuizzableItem() {
-		
 	}
 	
 	public QuizzableItem(String text, String scriptureReference) {
 		
-		this.scriptureReference = scriptureReference;
 		this.text = text;
+		this.scriptureReference = scriptureReference;
 		
 	}
 	
 	public String toString() {
 		return text + " - " + scriptureReference;
 	}
-
 	
 	
 	
@@ -28,6 +26,17 @@ public class QuizzableItem {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// *********Getters and Setters********* //
 	
 	public String getScriptureReference() {
 		return scriptureReference;

@@ -10,11 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 
-public abstract class GenericQuestionPanel extends JPanel {
+public abstract class MultipleChoiceQuestionPanel extends JPanel {
 
 	int numberOfAnswerOptions = 4;
-	
-	QuizzableItem[] randomQuizzableItemArray;
 	
 	String userAnswer    = "";
 	String correctAnswer = "";
@@ -31,7 +29,7 @@ public abstract class GenericQuestionPanel extends JPanel {
 	
 	JButton confirmAnswerButton;
 	
-	public GenericQuestionPanel() {
+	public MultipleChoiceQuestionPanel() {
 		
 		this.setBackground(Color.lightGray);
 		
@@ -67,10 +65,40 @@ public abstract class GenericQuestionPanel extends JPanel {
 		this.add(confirmAnswerButton);
 	}
 	
+	
+	public void generateNewQuestion() {
+		
+		QuizzableItem currentRandomScriptureOption;
+		String incorrectAnswer;
+		
+		answerButtonGroup.clearSelection();
+		int indexWhereCorrectAnswerWillBe = (new Random()).nextInt(numberOfAnswerOptions);
+		ArrayList<QuizzableItem> randomAnswers = generateRandomAnswers();
+		
+		for (int i=0;i<radioButtons.size();i++){
+			
+			JRadioButton currentButton = radioButtons.get(i);
+			currentRandomScriptureOption = randomAnswers.get(i);
+			
+			if (i == indexWhereCorrectAnswerWillBe) {
+				correctAnswer = currentRandomScriptureOption.getScriptureReference();
+				currentButton.setText(correctAnswer);
+				currentButton.setActionCommand(correctAnswer);
+				questionText.setText(randomAnswers.get(i).getText());
+			} else {
+				incorrectAnswer = currentRandomScriptureOption.getScriptureReference();
+				currentButton.setText(incorrectAnswer);
+				currentButton.setActionCommand(incorrectAnswer);
+			}
+		}	
+	}
+	
+	protected abstract ArrayList<QuizzableItem> generateRandomAnswers();
+	
 	public void checkAndDisplayAnswer() {
 		userAnswer = answerButtonGroup.getSelection().getActionCommand();
 		checkAnswer();
-		WhereInTheWord.displayAnswerPanel();
+		UIManager.displayAnswerPanel();
 	}
 	
 	public void checkAnswer() {
@@ -86,47 +114,18 @@ public abstract class GenericQuestionPanel extends JPanel {
 		
 	}
 	
-	public void generateNewQuestion() {
-		
-		QuizzableItem currentRandomScriptureOption;
-		String incorrectAnswer;
-		
-		int indexWhereCorrectAnswerWillBe = (new Random()).nextInt(numberOfAnswerOptions);
-		
-		generateAllAnswerOptions();
-		
-		for (int i=0;i<radioButtons.size();i++){
-			
-			JRadioButton currentButton = radioButtons.get(i);
-			
-			currentRandomScriptureOption = generateRandomAnswer();
-			
-			if (i == indexWhereCorrectAnswerWillBe) {
-				correctAnswer = currentRandomScriptureOption.getScriptureReference();
-				currentButton.setText(correctAnswer);
-				currentButton.setActionCommand(correctAnswer);
-				questionText.setText(currentRandomScriptureOption.getText());
-			} else {
-				incorrectAnswer = currentRandomScriptureOption.getScriptureReference();
-				currentButton.setText(incorrectAnswer);
-				currentButton.setActionCommand(incorrectAnswer);
-			}
-		}	
-	}
-	
-	protected QuizzableItem generateRandomAnswer() {
-		return null;
-	}
-	
-	protected void generateAllAnswerOptions() {
-		
-		
-		
-	}
 	
 	
 	
-	// *********Getters and Setters********* //
+	
+	
+	
+	
+	
+	
+	
+	
+// *********Getters and Setters********* //
 	
 	public int getNumberOfAnswerOptions() {
 		return numberOfAnswerOptions;

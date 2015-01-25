@@ -1,14 +1,17 @@
 package com.jerimiahwoods.whereintheword;
 
-import javax.swing.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class BibleVerseQuestionPanel extends GenericQuestionPanel {
+public class BibleVerseQuestionPanel extends MultipleChoiceQuestionPanel {
+	
+	ArrayList<BibleVerse> bibleVerses;
 	
 	public BibleVerseQuestionPanel() {
+		
+		bibleVerses = WhereInTheWord.getBibleVerses();
 		
 		confirmAnswerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -17,12 +20,17 @@ public class BibleVerseQuestionPanel extends GenericQuestionPanel {
 		});
 	}
 
-	public BibleVerse generateRandomAnswer() {
-											
-		Random randomizer = new Random();
-		int randomScriptureSelector = randomizer.nextInt(WhereInTheWord.getBibleVerses().size());
+	public ArrayList<QuizzableItem> generateRandomAnswers() {
+					
+		Collections.shuffle(bibleVerses);
 		
-		return WhereInTheWord.getBibleVerses().get(randomScriptureSelector);
+		ArrayList<QuizzableItem> randomAnswers = new ArrayList<QuizzableItem>();
+		
+		for (int i=0; i<4; i++){
+			randomAnswers.add(bibleVerses.get(i));
+		}
+		
+		return randomAnswers;
 	}
 		
 }

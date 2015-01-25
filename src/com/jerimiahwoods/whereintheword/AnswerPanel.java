@@ -27,26 +27,25 @@ public class AnswerPanel extends JPanel {
 		this.add(quitButton);
 		
 		quitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {WhereInTheWord.displayHomePanel();}
+			public void actionPerformed(ActionEvent e) {UIManager.displayHomePanel();}
 		});
 		
 		nextQuestionButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {WhereInTheWord.displayQuestionPanel();}
+			public void actionPerformed(ActionEvent e) {UIManager.displayQuestionPanel();}
 		});
 	}
 	
 	
 	
 	
+
 	
 	
 	
 	
 	
 	
-	
-	
-	// *********Getters and Setters********* //
+// *********Getters and Setters********* //
 	
 	public JLabel getResultLabel() {
 		return resultLabel;
