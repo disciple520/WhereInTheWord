@@ -1,9 +1,10 @@
 package com.jerimiahwoods.whereintheword.test;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import com.jerimiahwoods.whereintheword.BibleVerse;
+import com.jerimiahwoods.whereintheword.model.BibleVerse;
 
 public class TestBibleVerse {
 

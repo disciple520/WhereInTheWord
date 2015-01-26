@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.jerimiahwoods.whereintheword.ChapterSummary;
+import com.jerimiahwoods.whereintheword.model.ChapterSummary;
 
 public class TestChapterSummary {
 
