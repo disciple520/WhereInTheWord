@@ -6,7 +6,7 @@ import com.jerimiahwoods.whereintheword.view.UIManager;
 
 public class WhereInTheWord {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 	
 		UserData userData = new UserData();
 		userData = UserDataLoader.loadUserData();
