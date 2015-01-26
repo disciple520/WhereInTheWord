@@ -50,25 +50,32 @@ public abstract class MultipleChoiceQuestionPanel extends JPanel {
 		questionText.setLineWrap(true);
 		questionText.setWrapStyleWord(true);
 		questionText.setBackground(Color.lightGray);
-			
-		answerOneRadioButton = new JRadioButton();
-		answerTwoRadioButton = new JRadioButton();
-		answerThreeRadioButton = new JRadioButton();
-		answerFourRadioButton = new JRadioButton();
 		
-		answerButtonGroup = new ButtonGroup();
-		answerButtonGroup.add(answerOneRadioButton);
-		answerButtonGroup.add(answerTwoRadioButton);
-		answerButtonGroup.add(answerThreeRadioButton);
-		answerButtonGroup.add(answerFourRadioButton);
+		answerOneRadioButton   = new JRadioButton();
+		answerTwoRadioButton   = new JRadioButton();
+		answerThreeRadioButton = new JRadioButton();
+		answerFourRadioButton  = new JRadioButton();
 		
 		radioButtons = new ArrayList<JRadioButton>();
 		radioButtons.add(answerOneRadioButton);
 		radioButtons.add(answerTwoRadioButton);
 		radioButtons.add(answerThreeRadioButton);
 		radioButtons.add(answerFourRadioButton);
-		    
+		
+		answerButtonGroup = new ButtonGroup();
+		
+		for (JRadioButton button : radioButtons) {
+			answerButtonGroup.add(button);
+			button.addActionListener(new RadioButtonSelectedListener());
+		}
+		
 		confirmAnswerButton = new JButton("Confirm Answer");
+		
+		confirmAnswerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				checkAndDisplayAnswer();
+			}
+		});
 		
 		this.add(questionText);
 		this.add(answerOneRadioButton);
@@ -76,16 +83,13 @@ public abstract class MultipleChoiceQuestionPanel extends JPanel {
 		this.add(answerThreeRadioButton);
 		this.add(answerFourRadioButton);
 		this.add(confirmAnswerButton);
-		
-		dataController = new DataController();
-		
-		confirmAnswerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				checkAndDisplayAnswer();
-			}
-		});
 	}
 	
+	private class RadioButtonSelectedListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+            confirmAnswerButton.setEnabled(true);
+        }
+    };
 	
 	public void generateNewQuestion() {
 		
@@ -93,6 +97,8 @@ public abstract class MultipleChoiceQuestionPanel extends JPanel {
 		String incorrectAnswer;
 		
 		answerButtonGroup.clearSelection();
+		confirmAnswerButton.setEnabled(false);
+		
 		int indexWhereCorrectAnswerWillBe = (new Random()).nextInt(numberOfAnswerOptions);
 		ArrayList<QuizzableItem> randomAnswers = generateRandomAnswers();
 		
@@ -117,9 +123,9 @@ public abstract class MultipleChoiceQuestionPanel extends JPanel {
 	protected abstract ArrayList<QuizzableItem> generateRandomAnswers();
 	
 	public void checkAndDisplayAnswer() {
-		userAnswer = answerButtonGroup.getSelection().getActionCommand();
-		checkAnswer();
-		UIManager.displayAnswerPanel();
+			userAnswer = answerButtonGroup.getSelection().getActionCommand();
+			checkAnswer();
+			UIManager.displayAnswerPanel();
 	}
 	
 	public void checkAnswer() {

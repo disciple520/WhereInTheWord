@@ -14,7 +14,6 @@ import com.jerimiahwoods.whereintheword.controller.DataController;
 
 public class AnswerPanel extends JPanel {
 	
-	@SuppressWarnings("unused")
 	private DataController dataController;
 	
 	private JLabel  resultLabel;
