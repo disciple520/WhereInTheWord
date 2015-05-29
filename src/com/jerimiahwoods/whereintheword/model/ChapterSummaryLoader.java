@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 
 public class ChapterSummaryLoader {
 
-	final static String FILE_CONTAINING_CHAPTER_SUMMARIES   = "Chapter Summaries.ods";
+	final static String FILE_CONTAINING_CHAPTER_SUMMARIES   = "resources/Chapter Summaries.ods";
 	
 	private static ArrayList<ChapterSummary> chapterSummaries;
 	

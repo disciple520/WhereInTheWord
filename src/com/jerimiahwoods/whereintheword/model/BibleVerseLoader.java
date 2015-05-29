@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class BibleVerseLoader {
 
-	final static String FILE_CONTAINING_BIBLE_VERSES = "Bible Verses";
+	final static String FILE_CONTAINING_BIBLE_VERSES = "resources/Bible Verses";
 	
 	public static ArrayList<BibleVerse> loadVerses() {
 		
